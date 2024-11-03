@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .jumbotron, .card {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+            animation: fadeIn 1.5s;
+        }
+        .btn-primary {
+            background-color: #ff7e5f;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #feb47b;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/download.png}" src="../static/images/download.png" height="40" alt="Logo"/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Admin Dashboard</h1>
+        <p>Manage orders, restaurants, menus, and users</p>
+    </div>
+
+    <div class="row">
+        <!-- Orders Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text">View and manage all orders.</p>
+                    <a href="#" th:href="@{/admin/orders}" class="btn btn-primary">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Restaurants Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Restaurants</h5>
+                    <p class="card-text">Manage partner restaurants.</p>
+                    <a href="#" th:href="@{/admin/restaurants}" class="btn btn-primary">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Items Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Menu Items</h5>
+                    <p class="card-text">Add and update menu items.</p>
+                    <a href="#" th:href="@{/admin/menu-items}" class="btn btn-primary">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Users</h5>
+                    <p class="card-text">Manage customer accounts.</p>
+                    <a href="#" th:href="@{/admin/users}" class="btn btn-primary">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Settings Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Settings</h5>
+                    <p class="card-text">Configure site preferences.</p>
+                    <a href="#" th:href="@{/admin/settings}" class="btn btn-primary">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Reports</h5>
+                    <p class="card-text">Generate sales and order reports.</p>
+                    <a href="#" th:href="@{/admin/reports}" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

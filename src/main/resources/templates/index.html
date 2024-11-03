@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery Service</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        section {
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: #e66139;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .navbar-brand img {
+            height: 60px;
+            margin-right: 10px;
+        }
+        .navbar-light .navbar-nav .nav-link {
+            color: #ffffff !important;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+        .navbar-light .navbar-nav .nav-link:hover {
+            color: #a8dadc !important;
+        }
+        .artical {
+            text-align: center;
+            transform: translateY(25vh);
+            color: #fff;
+        }
+
+        .artical h1 {
+            font-size: 36px;
+            letter-spacing: 1.5px;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        .artical p {
+            font-size: 18px;
+            color: #7e7e7e;
+            line-height: 1.5;
+            margin-bottom: 50px;
+        }
+
+        .hero {
+            padding: 40px;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            color: #e66139;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        .hero p {
+            font-size: 1.2em;
+            color: #555;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            background-color: #fff;
+            margin: 20px 0;
+        }
+        .content-wrapper:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .content-wrapper .image-section {
+            flex: 1;
+            padding: 20px;
+        }
+        .content-wrapper .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .content-wrapper .text-section {
+            flex: 1;
+            padding: 20px;
+        }
+
+
+        .carousel-item img {
+            border-radius: 10px;
+            object-fit: cover;
+            height: 400px;
+        }
+        .btn-order {
+            background:#e66139;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-order:hover {
+            background: linear-gradient(90deg, #f1faee, #e66139);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .dropdown-menu {
+            background-color: #e66139;
+        }
+        .dropdown-item {
+            color: white;
+        }
+        .dropdown-item:hover {
+            background-color: #f1faee;
+            color: white;
+        }
+        footer {
+            background-color: #e66139;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.jpg}" src="../static/images/logo.jpg" alt="Food Delivery Logo"/>
+            <span class="text-white"th:text="#{site.name}">FOOD EXPRESS</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}"  th:text="#{nav.home}" href="#">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link"  th:href="@{/restaurants}" href="#" th:text="#{nav.restaurant}">Restaurant</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/menu}" th:text="#{nav.menu}">Menu</a>                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/login}" th:text="#{nav.login}">Login</a>
+
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/register}" th:text="#{nav.register}">Register</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/order}">
+                        <span th:text="#{nav.orders}">Orders</span>
+                        <span class="badge badge-light" th:text="${cartCount}">0</span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" data-toggle="dropdown">
+                        <span th:text="${#locale.language == 'en' ? 'English' : #locale.language == 'rw' ? 'Kinyarwanda' : 'Français'}">English</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" th:href="@{''(lang=en)}">English</a>
+                        <a class="dropdown-item" th:href="@{''(lang=rw)}">Kinyarwanda</a>
+                        <a class="dropdown-item" th:href="@{''(lang=fr)}">Français</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<section th:style="|background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('@{/images/background4.jpg}') no-repeat center center/cover;|" style="min-height: 100vh;">
+<div class="artical">
+    <h1 th:text="#{banner.title}">
+        best food delivery website
+    </h1>
+    <p th:text="#{banner.description}">
+        Welcome to our food delivery site, where culinary convenience meets an expansive array of delectable choices! Whether you're craving gourmet meals from local restaurants, comforting home-cooked favorites, or exotic dishes from around the world, we’ve got you covered. With an intuitive interface, you can easily browse menus, read reviews, and place your order in just a few clicks. Enjoy real-time tracking of your delivery and exclusive deals that make dining in more enjoyable than ever. Experience the joy of delicious food delivered right to your doorstep, tailored to your taste and schedule!
+    </p>
+</div>
+</section>
+<!-- Italian Cuisine Section -->
+<div class="content-wrapper">
+    <div class="image-section">
+        <div id="italianCarousel" class="carousel slide" data-ride="carousel" data-interval="4000">
+            <ol class="carousel-indicators">
+                <li data-target="#italianCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#italianCarousel" data-slide-to="1"></li>
+                <li data-target="#italianCarousel" data-slide-to="2"></li>
+
+            </ol>
+            <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="d-block w-100" th:src="@{/imageProduct/pizza.jpg}"  src="../static/imageProduct/pizza.jpg" alt="Restaurant Italien">
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" th:src="@{/imageProduct/image(1).jpg}" src="../static/imageProduct/image(1).jpg"alt="Pizza Spéciale">
+            </div>
+            <div class="carousel-item">
+
+                <img class="d-block w-100" th:src="@{/imageProduct/download_(1).jpg}" src="../static/imageProduct/download_(1).jpg "alt="Plats de Pâtes">
+            </div>
+
+        </div>
+        </div>
+    </div>
+    <div class="text-section hero">
+        <div>
+            <h1 th:text="#{section.italian}">Italian Delights</h1>
+            <p th:text="#{section.italian.description}">Experience authentic Italian cuisine delivered right to your doorstep. From wood-fired pizzas to homemade pasta, every dish is crafted with passion and tradition.</p><a href="#" class="btn btn-order" th:text="#{nav.order_now}">Order now</a>
+        </div>
+    </div>
+</div>
+
+<!-- Asian Cuisine Section -->
+<div class="content-wrapper">
+    <div class="text-section hero">
+        <div>
+            <h1 th:text="#{section.asian}">Asian Fusion</h1>
+            <p th:text="#{section.asian.description}">Experience authentic Italian cuisine delivered right to your doorstep. From wood-fired pizzas to homemade pasta, every dish is crafted with passion and tradition.</p>
+            <a href="#" class="btn btn-order" th:text="#{nav.explore_menu}">Explore Menu</a>
+        </div>
+    </div>
+    <div class="image-section">
+        <div id="asianCarousel" class="carousel slide" data-ride="carousel" data-interval="4000">
+            <ol class="carousel-indicators">
+                <li data-target="#asianCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#asianCarousel" data-slide-to="1"></li>
+                <li data-target="#asianCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" th:src="@{/imageProduct/sushi.jpg}"src="../static/imageProduct/sushi.jpg" alt="Asian Cuisine">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" th:src="@{/imageProduct/images.jpg}" src=" ../static/imageProduct/images.jpg" alt="Sushi Platter">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" th:src="@{/imageProduct/download.jpg}" src="../static/imageProduct/download.jpg " alt="Thai Curry">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Bites Section -->
+<div class="content-wrapper">
+    <div class="image-section">
+        <div id="quickBitesCarousel" class="carousel slide" data-ride="carousel" data-interval="4000">
+            <ol class="carousel-indicators">
+                <li data-target="#quickBitesCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#quickBitesCarousel" data-slide-to="1"></li>
+                <li data-target="#quickBitesCarousel" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100"th:src="@{/imageProduct/burger.jpg}" src="../static/imageProduct/burger.jpg " alt="Fast Food">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" th:src="@{/imageProduct/download(2).jpg}" src="../static/imageProduct/download(2).jpg " alt="Burgers">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" th:src="@{/imageProduct/dessert.jpg}" src="../static/imageProduct/dessert.jpg "alt="Snacks">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-section hero">
+        <div>
+            <h1 th:text="#{section.quick_bites}">Quick Bites</h1>
+            <p th:text="#{section.quick_bites.description}">Satisfy your cravings with our selection of delicious fast food options. From juicy burgers to crispy fries, we deliver your favorite comfort food in minutes.</p>
+            <a href="#" class="btn btn-order" th:text="#{nav.order_now}">Order Now</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p th:text="#{footer.copy}"></p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

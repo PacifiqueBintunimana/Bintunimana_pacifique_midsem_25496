@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload User Data - Food Delivery Service</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .navbar {
+      background-color: #e66139;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand img {
+      height: 60px;
+      margin-right: 10px;
+    }
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 40px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+      text-align: center;
+    }
+    .btn-upload {
+      background: #e66139;
+      color: white;
+      font-weight: bold;
+    }
+    .btn-upload:hover {
+      background: #a8dadc;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img th:src="@{/images/logo.jpg}" src="../static/images/logo.jpg" alt="Food Delivery Logo"/>
+      <span class="text-white" th:text="#{site.name}">FOOD EXPRESS</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <!-- Reuse existing nav items from the main page here -->
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/}" th:text="#{nav.home}">Home</a>
+        </li>
+        <!-- Other nav items as needed -->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="form-container">
+  <h2>Upload User Data</h2>
+  <form action="/admin/upload/users" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <input type="file" name="file" accept=".csv" class="form-control-file" required>
+    </div>
+    <button type="submit" class="btn btn-upload btn-block">Upload</button>
+  </form>
+  <p th:text="${userMessage}" class="mt-3 text-success"></p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

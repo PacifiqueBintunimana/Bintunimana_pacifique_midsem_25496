@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="#{welcome}">food delivery - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* General Styling */
+    body {
+      background-color: #fff8f0;
+      margin: 0;
+      display: flex;
+      font-family: 'Roboto', sans-serif;
+    }
+    .main-content {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      padding: 20px;
+    }
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background-color: #e66139;
+      color: #ffffff;
+      padding-top: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar a, .sidebar button {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      border: none;
+      background: none;
+    }
+    .sidebar a:hover, .sidebar button:hover {
+      background-color: #001F3F;
+    }
+    .navbar {
+      background: linear-gradient(90deg, #ff8c42, #ff3e3e);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #ffffff !important;
+      letter-spacing: 1.5px;
+    }
+    .navbar-brand img {
+      height: 60px;
+      margin-right: 10px;
+    }
+    .nav-link {
+      font-size: 1.1rem;
+      color: #ffecd1 !important;
+      margin-left: 15px;
+    }
+    .nav-link:hover {
+      color: #ffdcb1 !important;
+    }
+    .container h1 {
+      color: #ff3e3e;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .card {
+      border: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+    .card-header {
+      background-color: #ff8c42;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .notification-panel {
+      position: fixed;
+      right: 20px;
+      top: 80px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 1000;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .notification-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      max-width: 400px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+  <h3 th:text="#{allowed_menus_label}"></h3>
+  <div class="menu-box-container">
+    <a th:href="@{/dashboard}" class="menu-box" th:text="#{menu.dashboard}"></a>
+    <a th:if="${user.roles[0].name=='ROLE_ADMIN'}" th:href="@{/users}" class="menu-box" th:text="#{customer}"></a>
+    <a th:if="${user.roles[0].name=='ROLE_ADMIN'}" th:href="@{/upload}" class="menu-box" th:text="#{upload_file}"></a>
+    <a th:if="${user.roles[0].name=='ROLE_ADMIN'}" th:href="@{/menu}" class="menu-box" th:text="#{menu.add_menu}"></a>
+    <a th:if="${user.roles[0].name=='ROLE_ADMIN'}" th:href="@{/order}" class="menu-box" th:text="#{menu.orders}"></a>
+    <a th:if="${user.roles[0].name=='ROLE_USER'}" th:href="@{/profile}" class="menu-box" th:text="#{menu.profile}"></a>
+    <a th:if="${user.roles[0].name=='ROLE_USER'}" th:href="@{/order}" class="menu-box" th:text="#{menu.order_now}"></a>
+    <button class="btn btn-light" onclick="toggleNotifications()">
+      Notifications
+      <span id="notification-count" class="badge bg-danger">0</span>
+    </button>
+
+
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.jpg}" src="../static/images/logo.jpg" alt="Food Delivery Logo"/>
+        <span th:text="#{navbar.brand}"></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item" th:if="${user.roles[0].name=='ROLE_ADMIN'}">
+            <a class="nav-link" th:href="@{/users}" th:text="#{customer}">customer and employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/logout}" th:text="#{logout}">Logout</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span th:text="${#locale.language == 'en' ? 'English' : #locale.language == 'rw' ? 'Kinyarwanda' : 'Français'}"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+              <li><a class="dropdown-item" th:href="@{''(lang=en)}">English</a></li>
+              <li><a class="dropdown-item" th:href="@{''(lang=rw)}">Kinyarwanda</a></li>
+              <li><a class="dropdown-item" th:href="@{''(lang=fr)}">Français</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container mt-5">
+    <h1 class="mb-4" th:text="#{welcome}"></h1>
+    <div class="card">
+      <div class="card-header">
+        <h3 th:text="#{customer_information}"></h3>
+      </div>
+      <div class="card-body">
+        <p><strong><span th:text="#{name_label}"></span>:</strong> <span th:text="${user.firstName + ' ' + user.lastName}"></span></p>
+        <p><strong><span th:text="#{email_label}"></span>:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong><span th:text="#{role_label}"></span>:</strong> <span th:text="${user.roles[0].name}"></span></p>
+        <p><strong><span th:text="#{profile_picture}"></span>:</strong></p>
+        <div th:if="${user.profilePicture != null}">
+          <div class="card" style="width: 18rem;">
+            <img th:src="@{/download-profile(fileName=${user.profilePicture})}" class="card-img-top" alt="Profile Picture" style="object-fit: cover; height: 150px;">
+            <div class="card-body">
+              <a th:href="@{/download-profile(fileName=${user.profilePicture})}" class="btn btn-primary btn-block" th:text="#{download}"></a>
+            </div>
+          </div>
+        </div>
+
+        <div th:if="${messageSuccess}" class="alert alert-success">
+          <p th:text="${messageSuccess}"></p>
+        </div>
+        <div th:if="${messageError}" class="alert alert-danger">
+          <p th:text="${messageError}"></p>
+        </div>
+
+        <!-- Profile Picture Upload Form -->
+        <div class="card mt-4">
+          <div class="card-body">
+            <form th:action="@{/uploadProfilePicture(userId=${user.id})}" method="post" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="profilePicture" class="form-label" th:text="#{upload_profile}"></label>
+                <input class="form-control" type="file" id="profilePicture" name="profilePicture" accept="image/*">
+              </div>
+              <button type="submit" class="btn btn-primary" th:text="#{upload}"></button>
+            </form>
+          </div>
+        </div>
+        <div th:if="${user.roles[0].name == 'ROLE_ADMIN'}" class="container mt-4">
+          <h3>Send Notification</h3>
+          <form id="send-notification-form" onsubmit="event.preventDefault(); sendNotification();">
+            <div class="mb-3">
+              <label for="notification-title" class="form-label">Title</label>
+              <input type="text" id="notification-title" name="title" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="notification-message" class="form-label">Message</label>
+              <textarea id="notification-message" name="message" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Notification</button>
+          </form>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Chart Section -->
+  <div th:if="${user.roles[0].name == 'ROLE_ADMIN'}"class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+  <!-- Notification Panels -->
+  <div th:if="${user.roles[0].name == 'ROLE_USER'}"  id="notification-panel" class="notification-panel">
+    <h4>Notifications</h4>
+    <div id="notification-list"></div>
+    <div id="user-notification-list"></div>
+  </div>
+</div>
+
+
+
+
+<!-- Existing Notification Scripts -->
+<script>
+  async function fetchNotifications() {
+    const response = await fetch('/notifications/unread');
+    const notifications = await response.json();
+    const listDiv = document.getElementById('notification-list');
+    listDiv.innerHTML = ''; // Clear previous notifications
+    notifications.forEach(notification => {
+      const notificationItem = document.createElement('div');
+      notificationItem.className = 'notification-item';
+      notificationItem.innerHTML = `
+          <div>${notification.title}: ${notification.message}
+          <button onclick="markAsRead(${notification.id})">Mark as Read</button></div>
+        `;
+      listDiv.appendChild(notificationItem);
+    });
+    listDiv.style.display = 'block';
+  }
+
+  async function sendNotification() {
+    const form = document.getElementById('send-notification-form');
+    const formData = new FormData(form);
+    await fetch('/notifications/send', {
+      method: 'POST',
+      body: new URLSearchParams(formData)
+    });
+    alert('Notification sent successfully!');
+    form.reset(); // Clear the form after sending the notification
+  }
+
+  async function markAsRead(id) {
+    await fetch(`/notifications/mark-as-read/${id}`, { method: 'PUT' });
+    fetchNotifications(); // Refresh list after marking as read
+  }
+
+  async function fetchUserNotifications() {
+    const response = await fetch('/notifications/user/unread');
+    const notifications = await response.json();
+    const notificationListDiv = document.getElementById('user-notification-list');
+
+    notificationListDiv.innerHTML = ''; // Clear previous notifications
+    notifications.forEach(notification => {
+      const notificationItem = document.createElement('div');
+      notificationItem.className = 'notification-item';
+      notificationItem.innerHTML = `
+          <strong>${notification.title}</strong>
+          <p>${notification.message}</p>
+        `;
+      notificationListDiv.appendChild(notificationItem);
+    });
+
+    // Update unread notification count
+    document.getElementById('notification-count').innerText = notifications.length;
+
+    // Mark notifications as read after displaying
+    markAllNotificationsAsRead();
+  }
+
+  async function markAllNotificationsAsRead() {
+    await fetch('/notifications/user/mark-all-as-read', { method: 'PUT' });
+  }
+
+  // Fetch notifications on page load
+  window.onload = fetchUserNotifications;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Pie Chart for Appointment Status
+  const ctxPie = document.getElementById('pieChart').getContext('2d');
+  const pieChart = new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+      labels: ['Completed', 'Pending', 'Canceled'],
+      datasets: [{
+        data: [60, 25, 15],
+        backgroundColor: [
+          'rgba(79, 70, 229, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(255, 99, 132, 0.6)'
+        ],
+        borderColor: [
+          'rgba(79, 70, 229, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+        },
+        title: {
+          display: true,
+          text: 'Appointment Status Breakdown'
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

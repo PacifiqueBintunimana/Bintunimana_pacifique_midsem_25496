@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Error</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #FF914D, #FF5A36);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .error-code {
+      font-size: 4rem;
+      color: #FF5A36;
+      margin: 0;
+    }
+
+    .error-message {
+      color: #666;
+      margin: 1rem 0;
+    }
+
+    .home-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #FF5A36;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .home-button:hover {
+      background-color: #ff4987;
+    }
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <h1 class="error-code" th:text="${statusCode}">500</h1>
+  <p class="error-message" th:text="${errorMessage}">Internal Server Error</p>
+  <a href="/" class="home-button">Return to Home</a>
+</div>
+</body>
+</html>
